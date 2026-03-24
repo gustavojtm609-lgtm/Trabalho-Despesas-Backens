@@ -10,9 +10,18 @@ const ExpenseModel = {
   
   // Procura uma despesa específica pelo ID dentro do array
   getById: (id) => expenses.find(exp => exp.id === id),
+
   
   // Cria um novo objeto de despesa com ID automático e data
   create: (data) => {
+  // Validação: Impede data no futuro
+  const dataInformada = new Date(data.date);
+  const agora = new Date();
+
+    if (dataInformada > agora) {
+    // Lançamos um erro que será capturado pelo try/catch no app.js
+    throw new Error("A data da despesa não pode estar no futuro.");
+    }
     const newExpense = {
       id: uuidv4(), // Gera um ID único (Ex: 71b5e5ca...)
       title: data.title,
