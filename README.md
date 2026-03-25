@@ -21,3 +21,6 @@ Este projeto é uma API REST desenvolvida em **Node.js** e **Express** para gere
    npm install express
    npm install uuid
    npm install
+
+   http://localhost:3000/expenses
+body: {"title": "Supermercado Mensal","amount": 450.80,"category": "Alimentação","date": "2026-03-23","description": "Compras do mês no mercado local"}
