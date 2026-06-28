@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sistema de Gestão de Despesas Pessoais
 
 Este projeto é uma API REST desenvolvida em **Node.js** e **Express** para gerenciar despesas financeiras. O sistema permite criar, listar, atualizar e excluir registros, além de fornecer um resumo total dos gastos.
@@ -24,3 +25,6 @@ Este projeto é uma API REST desenvolvida em **Node.js** e **Express** para gere
 
    http://localhost:3000/expenses
 body: {"title": "Supermercado Mensal","amount": 450.80,"category": "Alimentação","date": "2026-03-23","description": "Compras do mês no mercado local"}
+=======
+# Trabalho-Despesas-Backens
+>>>>>>> b0e81259aef250e1b914106c6114848c2bd31b0c
