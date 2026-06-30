@@ -6,7 +6,7 @@ class ExpenseView {
     async create(req, res) {
         try {
             const { descricao, valor, data, status, categoriaId } = req.body;
-            const usuarioId = req.user.id; 
+            const usuarioId = req.user.id;
             const novaDespesa = await ExpenseController.create(descricao, valor, data, status, categoriaId, usuarioId);
             return this.renderSuccess(res, novaDespesa, 201);
         } catch (error) {
@@ -115,9 +115,9 @@ class ExpenseView {
         return {
             ...expData,
             _links: [
-                { rel: "self", method: "GET", href: `http://localhost:3000/api/expenses/${expData.id}` },
-                { rel: "update", method: "PUT", href: `http://localhost:3000/api/expenses/${expData.id}` },
-                { rel: "delete", method: "DELETE", href: `http://localhost:3000/api/expenses/${expData.id}` }
+                { rel: "self", method: "GET", href: `http://localhost:3000/expenses/${expData.id}` },
+                { rel: "update", method: "PUT", href: `http://localhost:3000/expenses/${expData.id}` },
+                { rel: "delete", method: "DELETE", href: `http://localhost:3000/expenses/${expData.id}` }
             ]
         };
     }

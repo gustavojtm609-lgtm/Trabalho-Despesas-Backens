@@ -9,10 +9,10 @@ class CategoryView {
 
             // Injeta os caminhos de auto-representação da API no JSON de saída
             novaCategoria._links = [
-                { rel: "self", method: "GET", href: `http://localhost:3000/api/categories/${novaCategoria.id}` },
-                { rel: "update", method: "PUT", href: `http://localhost:3000/api/categories/${novaCategoria.id}` },
-                { rel: "delete", method: "DELETE", href: `http://localhost:3000/api/categories/${novaCategoria.id}` },
-                { rel: "all_categories", method: "GET", href: "http://localhost:3000/api/categories" }
+                { rel: "self", method: "GET", href: `http://localhost:3000/categories/${novaCategoria.id}` },
+                { rel: "update", method: "PUT", href: `http://localhost:3000/categories/${novaCategoria.id}` },
+                { rel: "delete", method: "DELETE", href: `http://localhost:3000/categories/${novaCategoria.id}` },
+                { rel: "all_categories", method: "GET", href: "http://localhost:3000/categories" }
             ];
 
             return res.status(201).json({ message: "Categoria adicionada com sucesso!", category: novaCategoria });
@@ -29,9 +29,9 @@ class CategoryView {
             const categoriasComLinks = categorias.map(categoria => {
                 const categoriaFormatada = categoria.toJSON();
                 categoriaFormatada._links = [
-                    { rel: "self", method: "GET", href: `http://localhost:3000/api/categories/${categoria.id}` },
-                    { rel: "update", method: "PUT", href: `http://localhost:3000/api/categories/${categoria.id}` },
-                    { rel: "delete", method: "DELETE", href: `http://localhost:3000/api/categories/${categoria.id}` }
+                    { rel: "self", method: "GET", href: `http://localhost:3000/categories/${categoria.id}` },
+                    { rel: "update", method: "PUT", href: `http://localhost:3000/categories/${categoria.id}` },
+                    { rel: "delete", method: "DELETE", href: `http://localhost:3000/categories/${categoria.id}` }
                 ];
                 return categoriaFormatada;
             });
@@ -48,10 +48,10 @@ class CategoryView {
         try {
             const categoriaEncontrada = (await CategoryController.getById(id)).toJSON();
             categoriaEncontrada._links = [
-                { rel: "self", method: "GET", href: `http://localhost:3000/api/categories/${id}` },
-                { rel: "update", method: "PUT", href: `http://localhost:3000/api/categories/${id}` },
-                { rel: "delete", method: "DELETE", href: `http://localhost:3000/api/categories/${id}` },
-                { rel: "all_categories", method: "GET", href: "http://localhost:3000/api/categories" }
+                { rel: "self", method: "GET", href: `http://localhost:3000/categories/${id}` },
+                { rel: "update", method: "PUT", href: `http://localhost:3000/categories/${id}` },
+                { rel: "delete", method: "DELETE", href: `http://localhost:3000/categories/${id}` },
+                { rel: "all_categories", method: "GET", href: "http://localhost:3000/categories" }
             ];
             res.status(200).json(categoriaEncontrada);
         } catch (erro) {
@@ -67,9 +67,9 @@ class CategoryView {
         try {
             const categoriaAtualizada = (await CategoryController.update(id, dadosNovos)).toJSON();
             categoriaAtualizada._links = [
-                { rel: "self", method: "GET", href: `http://localhost:3000/api/categories/${id}` },
-                { rel: "delete", method: "DELETE", href: `http://localhost:3000/api/categories/${id}` },
-                { rel: "all_categories", method: "GET", href: "http://localhost:3000/api/categories" }
+                { rel: "self", method: "GET", href: `http://localhost:3000/categories/${id}` },
+                { rel: "delete", method: "DELETE", href: `http://localhost:3000/categories/${id}` },
+                { rel: "all_categories", method: "GET", href: "http://localhost:3000/categories" }
             ];
             res.status(200).json(categoriaAtualizada);
         } catch (erro) {
@@ -85,7 +85,7 @@ class CategoryView {
             await CategoryController.remove(id);
             const respostaDelete = {
                 message: "Categoria excluída com sucesso!",
-                _links: [{ rel: "all_categories", method: "GET", href: "http://localhost:3000/api/categories" }]
+                _links: [{ rel: "all_categories", method: "GET", href: "http://localhost:3000/categories" }]
             };
             res.status(200).json(respostaDelete);
         } catch (erro) {
