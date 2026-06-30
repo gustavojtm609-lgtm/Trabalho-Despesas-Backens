@@ -14,7 +14,10 @@ const ExpenseDB = sequelize.define('expense', {
     },
     valor: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: { args: [0.01], msg: "O valor deve ser maior que zero" } // Bloqueia valores negativos ou zero
+        }
     },
     data: {
         type: DataTypes.DATEONLY, // Guarda apenas a data (AAAA-MM-DD), sem hora

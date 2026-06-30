@@ -1,71 +1,53 @@
+require('dotenv').config(); // Carrega as variáveis de ambiente do arquivo .env
+
 const express = require('express');
 const cors = require('cors');
 
-// 1. IMPORTANDO A SUA VIEW DE USUÁRIO (INSTÂNCIA)
-const UserView = require('./view/user');
+// Conexão e models (o import de associations registra os relacionamentos)
+const { sequelize } = require('./model/database');
+require('./model/associations');
 
-// Mantendo o seu mock antigo para não quebrar as rotas de despesas já feitas
-const ExpenseModel = require('./models/expense'); 
+// Roteador central que reúne todas as rotas da API
+const routes = require('./routes');
+
+// Middleware de tratamento global de erros (sempre o último da cadeia)
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// 2. MIDDLEWARES GLOBAIS
-app.use(cors()); // Libera o acesso para o seu React (http://localhost:5173)
-app.use(express.json()); // Permite que o Express entenda requisições em formato JSON
+// =========================================================
+// 🛡️ MIDDLEWARES GLOBAIS
+// =========================================================
+app.use(cors()); // Libera o acesso para o frontend (ex: http://localhost:5173)
+app.use(express.json()); // Permite que o Express entenda requisições em JSON
 
 // =========================================================
-// 🚀 ROTAS DE AUTENTICAÇÃO
+// 🚀 ROTAS DA APLICAÇÃO
 // =========================================================
-
-// Rota de Login
-app.post('/api/auth/login', (req, res) => UserView.login(req, res));
-
-// Rota de Cadastro (Mapeada para aceitar tanto 'register' quanto 'signup')
-app.post('/api/auth/register', (req, res) => UserView.create(req, res));
-app.post('/api/auth/signup', (req, res) => UserView.create(req, res));
-
+app.use(routes);
 
 // =========================================================
-// 💰 SUAS ROTAS ANTIGAS DE DESPESAS 
+// ⚠️ TRATAMENTO GLOBAL DE ERROS
 // =========================================================
-app.get('/expenses/summary/total', (req, res) => {
-  const expenses = ExpenseModel.getAll();
-  const total = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-  res.json({ total });
-});
-
-app.post('/expenses', (req, res) => {
-  const { title, amount } = req.body;
-  if (!title) return res.status(400).json({ error: "O campo title é obrigatório" });
-  if (amount <= 0) return res.status(400).json({ error: "O amount deve ser maior que zero" });
-  
-  const newExpense = ExpenseModel.create(req.body);
-  res.status(201).json(newExpense);
-});
-
-app.get('/expenses', (req, res) => {
-  res.json(ExpenseModel.getAll());
-});
-
-app.put('/expenses/:id', (req, res) => {
-  const updatedExpense = ExpenseModel.update(req.params.id, req.body);
-  if (!updatedExpense) return res.status(404).json({ error: "Despesa não encontrada" });
-  res.json(updatedExpense);
-});
-
-app.delete('/expenses/:id', (req, res) => {
-  const deleted = ExpenseModel.delete(req.params.id);
-  if (!deleted) return res.status(404).json({ error: "Despesa não encontrada" });
-  res.status(204).send(); 
-});
+app.use(errorHandler);
 
 // =========================================================
-// INICIALIZAÇÃO DO SERVIDOR
+// 🔌 INICIALIZAÇÃO DO SERVIDOR
 // =========================================================
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`=========================================`);
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-  console.log(`💾 [Banco de Dados] Conectado com sucesso!`);
-  console.log(`=========================================`);
-});
+const PORT = process.env.PORT || 3000;
+
+// Sincroniza os models com o banco e só então sobe o servidor
+sequelize.sync()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`=========================================`);
+            console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+            console.log(`💾 [Banco de Dados] Conectado com sucesso!`);
+            console.log(`=========================================`);
+        });
+    })
+    .catch((erro) => {
+        console.error('❌ Falha ao conectar no banco de dados:', erro.message);
+    });
+
+module.exports = app;

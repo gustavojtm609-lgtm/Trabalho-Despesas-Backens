@@ -24,9 +24,9 @@ const authMiddleware = (req, res, next) => {
     // Abre o token usando a chave secreta e valida a assinatura
     jwt.verify(token, process.env.JWT_SECRET || "fallback_secret", (err, decoded) => {
         if (err) return res.status(401).json({ error: "Token inválido" });
-        
+
         // Injeta os dados decodificados do usuário dentro da requisição
-        req.user = decoded; 
+        req.user = decoded;
         return next(); // Libera o usuário para acessar a rota solicitada
     });
 };
